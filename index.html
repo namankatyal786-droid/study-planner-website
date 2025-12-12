@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner Pro - Organize Your Learning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>Study Planner Pro</h1>
+            </div>
+            <p class="tagline">Organize your academic journey efficiently</p>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="container">
+            <h2 class="main-title">Plan Your Study Schedule</h2>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Instructions Card -->
+        <section class="instructions-card">
+            <h3><i class="fas fa-info-circle"></i> How to Use This Planner</h3>
+            <div class="instructions-content">
+                <div class="instruction-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <p><strong>Add Tasks:</strong> Click "Add Task" to create new study items</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-arrows-alt-h"></i>
+                    <p><strong>Move Tasks:</strong> Drag and drop or use buttons to move between columns</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-save"></i>
+                    <p><strong>Auto-Save:</strong> All changes are saved automatically to your browser</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-filter"></i>
+                    <p><strong>Prioritize:</strong> Mark tasks as Low, Medium, or High priority</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control Buttons -->
+        <section class="controls">
+            <button id="addTaskBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Task
+            </button>
+            <button id="clearAllBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Clear All Tasks
+            </button>
+            <button id="exportBtn" class="btn btn-secondary">
+                <i class="fas fa-download"></i> Export Tasks
+            </button>
+        </section>
+
+        <!-- Task Modal (Hidden by default) -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-tasks"></i> Create New Study Task</h3>
+                    <button id="closeModal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="taskTitle"><i class="fas fa-heading"></i> Task Title *</label>
+                        <input type="text" id="taskTitle" placeholder="e.g., Complete Calculus Assignment" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskSubject"><i class="fas fa-book"></i> Subject *</label>
+                        <input type="text" id="taskSubject" placeholder="e.g., Mathematics, Physics, History" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskPriority"><i class="fas fa-flag"></i> Priority</label>
+                            <select id="taskPriority">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDueDate"><i class="fas fa-calendar-alt"></i> Due Date</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDescription"><i class="fas fa-align-left"></i> Description</label>
+                        <textarea id="taskDescription" rows="4" placeholder="Add details about the task..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelTaskBtn" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button id="saveTaskBtn" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Task
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Boards -->
+        <section class="boards-container">
+            <div class="board" data-column="backlog">
+                <div class="board-header">
+                    <h3><i class="fas fa-inbox"></i> Backlog</h3>
+                    <span class="task-count" id="backlog-count">0</span>
+                </div>
+                <div class="board-content" id="backlog-column"></div>
+            </div>
+
+            <div class="board" data-column="todo">
+                <div class="board-header">
+                    <h3><i class="fas fa-clipboard-list"></i> To Do</h3>
+                    <span class="task-count" id="todo-count">0</span>
+                </div>
+                <div class="board-content" id="todo-column"></div>
+            </div>
+
+            <div class="board" data-column="inprogress">
+                <div class="board-header">
+                    <h3><i class="fas fa-spinner"></i> In Progress</h3>
+                    <span class="task-count" id="inprogress-count">0</span>
+                </div>
+                <div class="board-content" id="inprogress-column"></div>
+            </div>
+
+            <div class="board" data-column="done">
+                <div class="board-header">
+                    <h3><i class="fas fa-check-circle"></i> Done</h3>
+                    <span class="task-count" id="done-count">0</span>
+                </div>
+                <div class="board-content" id="done-column"></div>
+            </div>
+        </section>
+        
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stats-card">
+                <h4><i class="fas fa-chart-bar"></i> Study Statistics</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-tasks">0</span>
+                        <span class="stat-label">Total Tasks</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="completed-tasks">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="high-priority-tasks">0</span>
+                        <span class="stat-label">High Priority</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="due-soon-tasks">0</span>
+                        <span class="stat-label">Due Soon</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-graduation-cap"></i> Study Planner Pro</h4>
+                    <p>Your personal academic assistant for organizing study tasks and managing deadlines efficiently.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-link"></i> Quick Links</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-user"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-tools"></i> Features</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Drag & Drop Interface</li>
+                        <li><i class="fas fa-check"></i> Auto Save</li>
+                        <li><i class="fas fa-check"></i> Priority Levels</li>
+                        <li><i class="fas fa-check"></i> Due Date Tracking</li>
+                        <li><i class="fas fa-check"></i> Task Statistics</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-address-card"></i> Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> support@studyplanner.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Education St, Learn City</li>
+                    </ul>
+                    <div class="newsletter">
+                        <p>Subscribe for updates</p>
+                        <div class="newsletter-form">
+                            <input type="email" placeholder="Your email">
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2023 Study Planner Pro. All rights reserved. | Designed with <i class="fas fa-heart"></i> for students worldwide</p>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a> | 
+                        <a href="#">Terms of Service</a> | 
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
